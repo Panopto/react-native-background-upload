@@ -1,5 +1,8 @@
 package com.vydia.RNUploader;
 
+import java.util.Map;
+import java.util.LinkedHashMap;
+
 import android.content.Context;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -7,6 +10,7 @@ import android.util.Log;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.gotev.uploadservice.ServerResponse;
@@ -44,6 +48,7 @@ public class UploadReceiver extends UploadServiceBroadcastReceiver {
         if (serverResponse != null) {
             params.putInt("responseCode", serverResponse.getHttpCode());
             params.putString("responseBody", serverResponse.getBodyAsString());
+            params.putMap("headers", this.mapHeaders(serverResponse.getHeaders()));
         }
 
         // Make sure we do not try to call getMessage() on a null object
@@ -64,6 +69,7 @@ public class UploadReceiver extends UploadServiceBroadcastReceiver {
         params.putString("id", uploadInfo.getUploadId());
         params.putInt("responseCode", serverResponse.getHttpCode());
         params.putString("responseBody", serverResponse.getBodyAsString());
+        params.putMap("headers", this.mapHeaders(serverResponse.getHeaders()));
         sendEvent("completed", params, context);
     }
 
@@ -85,6 +91,19 @@ public class UploadReceiver extends UploadServiceBroadcastReceiver {
         } else {
             Log.e(TAG, "sendEvent() failed due reactContext == null!");
         }
+    }
+
+    /**
+     * Maps headers to a WritableMap
+     */
+    private WritableMap mapHeaders(LinkedHashMap<String, String> headers) {
+        WritableMap map = new WritableNativeMap();
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            map.putString(entry.getKey(), entry.getValue());
+        }
+
+        return map;
     }
 
     @Override

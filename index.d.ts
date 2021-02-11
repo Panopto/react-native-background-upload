@@ -16,6 +16,7 @@ declare module "react-native-background-upload" {
 
         responseCode: number
         responseBody: string
+        headers: { [key: string]: string }
     }
     export type FileInfo = {
         name: string
