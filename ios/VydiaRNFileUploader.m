@@ -65,6 +65,22 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
 }
 
 /*
+ Provide a function to resume all tasks
+ This should be called from AppDelegate's applicationDidBecomeActive to work
+ around a bug with NSURLSession where delegate events don't resume
+ https://developer.apple.com/forums/thread/77666?page=2
+ */
++ (void)resumeTasks {
+    if (_urlSession != nil) {
+        [_urlSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> * _Nonnull tasks) {
+            for (id task in tasks) {
+                [task resume];
+            }
+        }];
+    }
+}
+
+/*
  Gets file information for the path specified.  Example valid path is: file:///var/mobile/Containers/Data/Application/3C8A0EFB-A316-45C0-A30A-761BF8CCF2F8/tmp/trim.A5F76017-14E9-4890-907E-36A045AF9436.MOV
  Returns an object such as: {mimeType: "video/quicktime", size: 2569900, exists: true, name: "trim.AF9A9225-FC37-416B-A25B-4EDB8275A625.MOV", extension: "MOV"}
  */
