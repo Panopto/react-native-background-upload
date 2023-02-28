@@ -1,3 +1,13 @@
+# Panopto/react-native-background-upload
+
+This is a Panopto-specific fork of the Vydia/react-native-background-upload project that adds the following functionality for iOS:
+
+1. responseHeaders are included in the upload completion event and exposed to TypeScript
+2. Exposes setCompletionHandlerWithIdentifier to be called from AppDelegate.mm so that upload completion can happen in the background
+3. Exposes resumeTasks to be called from AppDelegate.mm to work around a bug in NSURLSession (https://developer.apple.com/forums/thread/77666?page=2)
+
+Android code is not modified and can use the latest from the original repository.
+
 # react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload) ![GitHub Actions status](https://github.com/Vydia/react-native-background-upload/workflows/Test%20iOS%20Example%20App/badge.svg) ![GitHub Actions status](https://github.com/Vydia/react-native-background-upload/workflows/Test%20Android%20Example%20App/badge.svg) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
