@@ -218,11 +218,13 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
                 ),
                 error = UploadNotificationStatusConfig(
                         title = if (notification.hasKey("onErrorTitle")) notification.getString("onErrorTitle")!! else "",
-                        message = if (notification.hasKey("onErrorMessage")) notification.getString("onErrorMessage")!! else ""
+                        message = if (notification.hasKey("onErrorMessage")) notification.getString("onErrorMessage")!! else "",
+                        autoClear = notification.hasKey("autoClear") && notification.getBoolean("autoClear")
                 ),
                 cancelled = UploadNotificationStatusConfig(
                         title = if (notification.hasKey("onCancelledTitle")) notification.getString("onCancelledTitle")!! else "",
-                        message = if (notification.hasKey("onCancelledMessage")) notification.getString("onCancelledMessage")!! else ""
+                        message = if (notification.hasKey("onCancelledMessage")) notification.getString("onCancelledMessage")!! else "",
+                        autoClear = notification.hasKey("autoClear") && notification.getBoolean("autoClear")
                 )
         )
         request.setNotificationConfig { _, _ ->
