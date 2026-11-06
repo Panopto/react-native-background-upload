@@ -10,7 +10,6 @@
 
 RCT_EXPORT_MODULE();
 
-@synthesize bridge = _bridge;
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
 static NSString *BACKGROUND_SESSION_ID = @"ReactNativeBackgroundUpload";

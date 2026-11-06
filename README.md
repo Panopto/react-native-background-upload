@@ -12,10 +12,6 @@ Android code is not modified and can use the latest from the original repository
 
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
-NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
-`npm show react-native-background-upload versions`
-
-
 # Installation
 
 ## 1. Install package
@@ -26,11 +22,9 @@ or
 
 `yarn add react-native-background-upload`
 
-Note: if you are installing on React Native < 0.47, use `react-native-background-upload@3.0.0` instead of `react-native-background-upload`
-
 ## 2. Link Native Code
 
-### Autolinking (React Native >= 0.60)
+### Autolinking
 
 ##### iOS
 
@@ -42,54 +36,6 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 Add this to your ProGuard configuration `(proguard-rules.pro)` :
 
 `-keep class net.gotev.uploadservice.** { *; }`
-
-### Automatic Native Library Linking (React Native < 0.60)
-
-`react-native link react-native-background-upload`
-
-### Or, Manually Link It
-
-#### iOS
-
-1. In the XCode's "Project navigator", right click on your project's Libraries folder ➜ `Add Files to <...>`
-2. Go to `node_modules` ➜ `react-native-background-upload` ➜ `ios` ➜ select `VydiaRNFileUploader.xcodeproj`
-3. Add `VydiaRNFileUploader.a` to `Build Phases -> Link Binary With Libraries`
-
-#### Android
-1. Add the following lines to `android/settings.gradle`:
-
-    ```gradle
-    include ':react-native-background-upload'
-    project(':react-native-background-upload').projectDir = new File(settingsDir, '../node_modules/react-native-background-upload/android')
-    ```
-2. Add the compile and resolutionStrategy line to the dependencies in `android/app/build.gradle`:
-
-    ```gradle
-    configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' } // required by react-native-background-upload until React Native supports okhttp >= okhttp 3.5
-
-    dependencies {
-        compile project(':react-native-background-upload')
-    }
-    ```
-
-
-3. Add the import and link the package in `MainApplication.java`:
-
-    ```java
-    import com.vydia.RNUploader.UploaderReactPackage;  <-- add this import
-
-    public class MainApplication extends Application implements ReactApplication {
-        @Override
-        protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(
-                new MainReactPackage(),
-                new UploaderReactPackage() // <-- add this line
-            );
-        }
-    }
-    ```
-
-4. Ensure Android SDK versions.  Open your app's `android/app/build.gradle` file.  Ensure `compileSdkVersion` and `targetSdkVersion` are 25.  Otherwise you'll get compilation errors.
 
 ## 3. Expo
 
@@ -276,33 +222,18 @@ Event Data
 |`id`|string|Required|The ID of the upload.|
 
 # Customizing Android Build Properties
-You may want to customize the `compileSdk, buildToolsVersion, and targetSdkVersion` versions used by this package.  For that, add this to `android/build.gradle`:
+This package reads `compileSdkVersion` and `minSdkVersion` from your app's root `android/build.gradle`, falling back to 36 and 24. A React Native app already defines both in its `buildscript.ext` block:
 
-```
-ext {
-    targetSdkVersion = 23
-    compileSdkVersion = 23
-    buildToolsVersion = '23.0.2'
-}
-```
-
-Add it above `allProjects` and you're good.  Your `android/build.gradle` might then resemble:
 ```
 buildscript {
-    repositories {
-        jcenter()
+    ext {
+        compileSdkVersion = 36
+        minSdkVersion = 24
     }
 }
-
-ext {
-    targetSdkVersion = 27
-    compileSdkVersion = 27
-    buildToolsVersion = '23.0.2'
-}
-
-allprojects {
-
 ```
+
+It does not read `targetSdkVersion` or `buildToolsVersion`, and it declares no repositories of its own, so your app's repositories (`google()` and `mavenCentral()`) must be available to it. React Native 0.73 or later is required: the app's React Native Gradle plugin supplies the `react-android` version and the Java 17 toolchain, and the app's root `build.gradle` must put the Kotlin Gradle plugin on the classpath.
 
 # FAQs
 
